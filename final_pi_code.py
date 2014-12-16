@@ -41,6 +41,7 @@ def camera_capture():
     
     with picamera.PiCamera() as camera:
         camera.start_preview()
+        camera.preview.alpha = 128
         Run = 1
         while Run:
             GPIO.wait_for_edge(18, GPIO.FALLING)  # new
@@ -58,7 +59,14 @@ def camera_capture():
     command = "zbarimg"
     location = "/home/pi/Desktop/image4.jpg"
     #result = run_p(command+location)
+    result = ''
+    try:
+        result = subprocess.check_output(["zbarimg", location])
+    except:
+        camera_capture()
+    result = ' '
     result = subprocess.check_output(["zbarimg", location])
+        
     obj_temp = sensor.readObjTempC()
     
     new_result = result.split(":")
